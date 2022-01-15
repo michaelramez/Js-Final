@@ -1,25 +1,4 @@
 
-let arrHighScore=[{key:'A',value:0}];
-
-  if (localStorage !== null) {
-     
-    for (var i=0; i < localStorage.length; i++)  {
-          arrHighScore[i]={
-          key:localStorage.key(i),
-          value:localStorage.getItem(localStorage.key(i))
-        }
-    
-     }
-   
-    arrHighScore.sort(function(a, b){return b.value - a.value});
-    
-    document.getElementById("h3_highScore").innerText="High Score: "+arrHighScore[0].value+"";
-
-    }
-
-
-
-
 
 // --------------------------------------------------
 
@@ -108,7 +87,7 @@ let arrHighScore=[{key:'A',value:0}];
 
 // --------------------------------------------------
 
-    class Dot {
+    class Square {
 
         constructor(x, y) {
             this.x = x;
@@ -121,7 +100,7 @@ let arrHighScore=[{key:'A',value:0}];
         draw() {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.width / 2, Math.PI * 2, false);
-            ctx.fillStyle='Black';
+            ctx.fillStyle='Black'
             ctx.fill();
             ctx.lineWidth = 1;
             ctx.strokeStyle = 'Gold';
@@ -143,7 +122,7 @@ let arrHighScore=[{key:'A',value:0}];
 
         add() {
             if (this.hasBack()) return this.back.add();
-            this.back = new Dot(this.x, this.y);
+            this.back = new Square(this.x, this.y);
             this.back.width *= 1.2;
             this.width *= 1.2;
         }
@@ -173,7 +152,7 @@ let arrHighScore=[{key:'A',value:0}];
                    this.y > canvas.height - this.height || this.y < 0;
         }
 
-        dotHit(body, head) {
+        squareHit(body, head) {
             return head.x == body.x && head.y == body.y;
         }   
 
@@ -185,9 +164,9 @@ let arrHighScore=[{key:'A',value:0}];
             if (second && !this.hasBack()) return false;
             if (second) return this.back.hit_body(head);
 
-            if (this.hasBack()) return this.dotHit(this, head) || this.back.hit_body(head);
+            if (this.hasBack()) return this.squareHit(this, head) || this.back.hit_body(head);
 
-            return this.dotHit(this, head);
+            return this.squareHit(this, head);
 
         }
 
@@ -216,14 +195,13 @@ let arrHighScore=[{key:'A',value:0}];
     class Snake {
 
         constructor() {
-            this.head = new Dot(200, 30);
+            this.head = new Square(200, 30);
             this.draw();
             this.direction = 'down';
             this.head.add();
             this.head.add();
             this.head.add();
             this.head.add();
-            this.score = 0;
         }
 
         draw() {
@@ -231,35 +209,34 @@ let arrHighScore=[{key:'A',value:0}];
         }
 
         right() {
-            if (this.direction == 'left') return;
+            if (this.direction === 'left') return;
             this.direction = 'right';
         }
 
         left() {
-            if (this.direction == 'right') return;
+            if (this.direction === 'right') return;
             this.direction = 'left';
         }
 
         up() {
-            if (this.direction == 'down') return;
+            if (this.direction === 'down') return;
             this.direction = 'up';
         }
 
         down() {
-            if (this.direction == 'up') return;
+            if (this.direction === 'up') return;
             this.direction = 'down';
         }
 
         move() {
-            if (this.direction == 'right') return this.head.right();
-            if (this.direction == 'down') return this.head.down();
-            if (this.direction == 'left') return this.head.left();
-            if (this.direction == 'up') return this.head.up();
+            if (this.direction === 'right') return this.head.right();
+            if (this.direction === 'down') return this.head.down();
+            if (this.direction === 'left') return this.head.left();
+            if (this.direction === 'up') return this.head.up();
         }
 
         eat() {
             this.head.add();
-            this.score = this.score + 1;
         }
 
         dead() {
@@ -273,101 +250,112 @@ let arrHighScore=[{key:'A',value:0}];
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
-    var audio_background = new Audio();
-    audio_background.src = "Meditative-Space.mp3";
-
-    var audio_eat = new Audio();
-    audio_eat.src = "mixkit-winning-a-coin-video-game-2069.wav";
-
-    var audio_dead = new Audio();
-    audio_dead.src = "mixkit-player-losing-or-failing-2042.wav";
-    
-    var audio_flag=0;
-
     const snake = new Snake();
-    
+    console.log(snake);
 
     let food=Food.generate();
-
-    let poisons=[];
-
-    let gameOver=false;
-
-    poisons.push(Poison.generate());
+    
+    let poison=Poison.generate();
     
     let poisoned=false;
 
-    let poison_time=snake.score+5;
+    let score=1;
 
     let time_count=1;
 
-    let pauseMenu=false;
-
     window.addEventListener('keydown', (event) => {
-            
-            if(audio_flag==0)
-            {
-                audio_background.play();
-                audio_flag=1;
-            }
-
-            if(snake.dead()!==true)
-            event.preventDefault;
-
-            if (event.key === "ArrowDown") return snake.down();
-            if (event.key === "ArrowRight") return snake.right();
-            if (event.key === "ArrowUp") return snake.up();
-            if (event.key === "ArrowLeft") return snake.left();
-            if ((event.key === "Escape") &&(!snake.dead())) return pauseMenu=!pauseMenu;    
-            
+        event.preventDefault();
+            if (event.keyCode === 40) return snake.down();
+            if (event.keyCode === 39) return snake.right();
+            if (event.keyCode === 38) return snake.up();
+            if (event.keyCode === 37) return snake.left();
         return false;
     });
 
+        let loop_draw  =  setInterval(() => {
 
-    
+        snake.move();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        snake.draw();
+        snake.head.grid();
+        drawFood();
+        drawPoison();
 
-    function drawFood() 
-    {
+        if (snake.dead()) {
+            // console.log('Has muerto ............');
+            // window.clearInterval(loop_food);
+            window.clearInterval(loop_draw);
+        }
+
+    }, 1000 / (15*time_count));
+
+//     if(time_count>1)
+//     {
+//     let loop1_draw  =  setInterval(() => {
+
+//         snake.move();
+//         ctx.clearRect(0, 0, canvas.width, canvas.height);
+//         snake.draw();
+//         snake.head.grid();
+//         drawFood();
+//         drawPoison();
+
+//         if (snake.dead()) {
+//             // console.log('Has muerto ............');
+//             // window.clearInterval(loop_food);
+//             window.clearInterval(loop1_draw);
+//         }
+
+//     }, 1000 / (15*time_count));
+
+// }
+// const loop_food  =  setInterval(() => {
+
+//         const food = Food.generate();
+//         foods.push(food);
+
+//         setTimeout(() => {
+//             removeFromFoods(food);
+//         }, 8000);
+
+//     }, 2000);
+
+    function drawFood() {
         
-            if (typeof food !== 'undefined') 
-            {
+            if (typeof food !== 'undefined') {
                 food.draw();
 
                 if (hit(food, snake.head)) {
-                                        
+                    // removeFromFoods(food);
+                    // console.log('Más 10 puntos .... ^^');
                     snake.eat();
-                    audio_eat.play();
                     food=Food.generate();
+                    poison=Poison.generate();
+                    score++;
+                switch(score)
+                {
+                    case 10:
+                    time_count++;
+                    break;
 
-                    document.getElementById("h3_Score").innerText="Score: "+snake.score+"";
+                    case 20:
+                    time_count++;    
+                    break;
 
-                    for (const i in poisons) {
-
-                        poisons[i]=Poison.generate();
-                    }
-                    
-                    if(snake.score == poison_time)
-                    {
-                        poisons.push(Poison.generate());
-                        
-                        poison_time=snake.score+5;
-
-                        time_count+=3;
-                    }
+                    case 30:
+                    time_count++;    
+                    break;
+                }
 
                 }
             }
 
     }
 
-
-
-
     function drawPoison() {
-        
-            for (const i in poisons) {
+        // for (const i in foods) {
 
-             const poison = poisons[i];
+        //     const food = foods[i];
 
             if (typeof poison !== 'undefined') {
                 poison.draw();
@@ -379,7 +367,7 @@ let arrHighScore=[{key:'A',value:0}];
             }
 
     }
-}
+    
 
     function hit(food, snake_head) {
         let hit = false;
@@ -392,94 +380,6 @@ let arrHighScore=[{key:'A',value:0}];
 
         return hit;
     }
-
-    function pauseMenuRemove()
-    {
-        document.getElementById("divPause").style.display="none";
-        pauseMenu=false; 
-    }
-
-
-    function loadGame()
-    {
-        if (!pauseMenu) {
-            
-            pauseMenuRemove();
-            snake.move();
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            snake.draw();
-            snake.head.grid();
-            drawFood();
-            drawPoison();
-        }
-
-        if(pauseMenu)
-        {
-           document.getElementById("divPause").style.display="block"; 
-        }
-        
-
-
-        if (snake.dead()) 
-        {
-
-
-            audio_background.pause();
-            audio_dead.play();
-
-            // window.clearInterval(loop_food);
-
-
-
-            document.getElementById("game_over").classList.remove("displayGameOver");
-
-            let form = document.querySelector("form");
-            let inputname = document.getElementById("namePlayer");
-
-
-            form.addEventListener("submit", (e) => {
-                e.preventDefault();
-
-                
-            if (localStorage !== null) {
-                for (var i = 0; i < localStorage.length; i++) {
-
-                    if ((inputname.value == localStorage.key(i)) && (snake.score < localStorage.getItem(localStorage.key(i))))
-                        snake.score = localStorage.getItem(localStorage.key(i));
-                }
-            }
-
-            localStorage.setItem(inputname.value, snake.score);
-
-            inputname.value = "";
-
-            document.getElementById("game_over").style.display="none";
-            
-            document.getElementById("divPause").style.display="block";
-            document.getElementById("displayButton").style.display="none";
-            document.getElementById("h2Pause").innerText="Want to give it another try"
-
-            })
-            
-
-        }
-        
-        if(!snake.dead())
-        loop_draw = setTimeout(loadGame, 1000 / (15 + time_count));
-
-    }
-
-    // let loop_draw;
-
-   
-
-
-    loadGame();
-
-    
-    
-
-    
 
 
 // --------------------------------------------------

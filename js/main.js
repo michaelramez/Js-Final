@@ -1,4 +1,3 @@
-
 let arrHighScore=[{key:'A',value:0}];
 
   if (localStorage !== null) {
@@ -8,7 +7,9 @@ let arrHighScore=[{key:'A',value:0}];
           key:localStorage.key(i),
           value:localStorage.getItem(localStorage.key(i))
         }
-    
+        // console.log(localStorage.key(i));
+        // arrHighScore[i].key=localStorage.key(i);
+        // arrHighScore[i].value=localStorage.getItem(localStorage.key(i));
      }
    
     arrHighScore.sort(function(a, b){return b.value - a.value});
@@ -108,7 +109,7 @@ let arrHighScore=[{key:'A',value:0}];
 
 // --------------------------------------------------
 
-    class Dot {
+    class Square {
 
         constructor(x, y) {
             this.x = x;
@@ -143,7 +144,7 @@ let arrHighScore=[{key:'A',value:0}];
 
         add() {
             if (this.hasBack()) return this.back.add();
-            this.back = new Dot(this.x, this.y);
+            this.back = new Square(this.x, this.y);
             this.back.width *= 1.2;
             this.width *= 1.2;
         }
@@ -173,7 +174,7 @@ let arrHighScore=[{key:'A',value:0}];
                    this.y > canvas.height - this.height || this.y < 0;
         }
 
-        dotHit(body, head) {
+        squareHit(body, head) {
             return head.x == body.x && head.y == body.y;
         }   
 
@@ -185,9 +186,9 @@ let arrHighScore=[{key:'A',value:0}];
             if (second && !this.hasBack()) return false;
             if (second) return this.back.hit_body(head);
 
-            if (this.hasBack()) return this.dotHit(this, head) || this.back.hit_body(head);
+            if (this.hasBack()) return this.squareHit(this, head) || this.back.hit_body(head);
 
-            return this.dotHit(this, head);
+            return this.squareHit(this, head);
 
         }
 
@@ -216,7 +217,7 @@ let arrHighScore=[{key:'A',value:0}];
     class Snake {
 
         constructor() {
-            this.head = new Dot(200, 30);
+            this.head = new Square(200, 30);
             this.draw();
             this.direction = 'down';
             this.head.add();
@@ -274,24 +275,22 @@ let arrHighScore=[{key:'A',value:0}];
     const ctx = canvas.getContext('2d');
 
     var audio_background = new Audio();
-    audio_background.src = "Meditative-Space.mp3";
+    audio_background.src = "F:/Game/Meditative-Space.mp3";
 
     var audio_eat = new Audio();
-    audio_eat.src = "mixkit-winning-a-coin-video-game-2069.wav";
+    audio_eat.src = "F:/Game/mixkit-winning-a-coin-video-game-2069.wav";
 
     var audio_dead = new Audio();
-    audio_dead.src = "mixkit-player-losing-or-failing-2042.wav";
+    audio_dead.src = "F:/Game/mixkit-player-losing-or-failing-2042.wav";
     
     var audio_flag=0;
 
     const snake = new Snake();
-    
+    console.log(snake);
 
     let food=Food.generate();
 
     let poisons=[];
-
-    let gameOver=false;
 
     poisons.push(Poison.generate());
     
@@ -300,8 +299,6 @@ let arrHighScore=[{key:'A',value:0}];
     let poison_time=snake.score+5;
 
     let time_count=1;
-
-    let pauseMenu=false;
 
     window.addEventListener('keydown', (event) => {
             
@@ -318,19 +315,59 @@ let arrHighScore=[{key:'A',value:0}];
             if (event.key === "ArrowRight") return snake.right();
             if (event.key === "ArrowUp") return snake.up();
             if (event.key === "ArrowLeft") return snake.left();
-            if ((event.key === "Escape") &&(!snake.dead())) return pauseMenu=!pauseMenu;    
-            
         return false;
     });
 
+        let loop_draw  =  setInterval(() => {
 
-    
+        snake.move();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        snake.draw();
+        snake.head.grid();
+        drawFood();
+        drawPoison();
 
-    function drawFood() 
-    {
+        if (snake.dead()) {
+            
+
+            audio_background.pause();
+            audio_dead.play();
+
+            // window.clearInterval(loop_food);
+            window.clearInterval(loop_draw);
+
+            document.getElementById("game_over").classList.remove("displayGameOver");
+            
+            let form = document.querySelector("form");
+            let inputname = document.getElementById("namePlayer");
+            
+            
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                
+                if(inputname.value != "")
+                {
+                    if (localStorage !== null) {
+                        for (var i=0; i < localStorage.length; i++)  {
+                          
+                            if((inputname.value == localStorage.key(i)) && (snake.score < localStorage.getItem(localStorage.key(i))))
+                            snake.score=localStorage.getItem(localStorage.key(i));
+                         }  
+                       }
+                    localStorage.setItem(inputname.value,snake.score);
+
+                }
+                
+                inputname.value= "";
+        })
+        }
+
+    }, 1000 / (15*time_count));
+
+
+    function drawFood() {
         
-            if (typeof food !== 'undefined') 
-            {
+            if (typeof food !== 'undefined') {
                 food.draw();
 
                 if (hit(food, snake.head)) {
@@ -351,8 +388,6 @@ let arrHighScore=[{key:'A',value:0}];
                         poisons.push(Poison.generate());
                         
                         poison_time=snake.score+5;
-
-                        time_count+=3;
                     }
 
                 }
@@ -360,11 +395,7 @@ let arrHighScore=[{key:'A',value:0}];
 
     }
 
-
-
-
     function drawPoison() {
-        
             for (const i in poisons) {
 
              const poison = poisons[i];
@@ -392,94 +423,6 @@ let arrHighScore=[{key:'A',value:0}];
 
         return hit;
     }
-
-    function pauseMenuRemove()
-    {
-        document.getElementById("divPause").style.display="none";
-        pauseMenu=false; 
-    }
-
-
-    function loadGame()
-    {
-        if (!pauseMenu) {
-            
-            pauseMenuRemove();
-            snake.move();
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            snake.draw();
-            snake.head.grid();
-            drawFood();
-            drawPoison();
-        }
-
-        if(pauseMenu)
-        {
-           document.getElementById("divPause").style.display="block"; 
-        }
-        
-
-
-        if (snake.dead()) 
-        {
-
-
-            audio_background.pause();
-            audio_dead.play();
-
-            // window.clearInterval(loop_food);
-
-
-
-            document.getElementById("game_over").classList.remove("displayGameOver");
-
-            let form = document.querySelector("form");
-            let inputname = document.getElementById("namePlayer");
-
-
-            form.addEventListener("submit", (e) => {
-                e.preventDefault();
-
-                
-            if (localStorage !== null) {
-                for (var i = 0; i < localStorage.length; i++) {
-
-                    if ((inputname.value == localStorage.key(i)) && (snake.score < localStorage.getItem(localStorage.key(i))))
-                        snake.score = localStorage.getItem(localStorage.key(i));
-                }
-            }
-
-            localStorage.setItem(inputname.value, snake.score);
-
-            inputname.value = "";
-
-            document.getElementById("game_over").style.display="none";
-            
-            document.getElementById("divPause").style.display="block";
-            document.getElementById("displayButton").style.display="none";
-            document.getElementById("h2Pause").innerText="Want to give it another try"
-
-            })
-            
-
-        }
-        
-        if(!snake.dead())
-        loop_draw = setTimeout(loadGame, 1000 / (15 + time_count));
-
-    }
-
-    // let loop_draw;
-
-   
-
-
-    loadGame();
-
-    
-    
-
-    
 
 
 // --------------------------------------------------

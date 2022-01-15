@@ -1,0 +1,70 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Snake Game🐍</title>
+    <link href="Style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+
+    <style>
+
+
+    </style>
+
+</head>
+
+<body>
+    <h1 style="margin: 0;color: white; text-align: center;padding: 0;"> "Enjoy Your Snake Game🐍"</h1>
+
+    <a href="index.html"> <img src="./Images/arrowback.jpg" height="50px" style=" margin-top: 0%; " class="back"></a>
+
+    <a href="HowToPlay.html"><img src="./Images/how.png" class="home"
+            style=" width: 18%; margin-top: 12%; margin-right: 3%;"></a>
+
+
+    <h4 id="h4Pause"><i class="fas fa-pause"></i> Esc</h4>
+
+
+
+    <h3 id="h3_Score">Score:</h3>
+
+    <h3 id="h3_highScore">High Score:</h3>
+
+    <canvas id="canvas" width="600" height="400"
+        style="text-align: center; margin-top: 2%; margin-left: 19%; "></canvas>
+
+    <div id="game_over" class="displayGameOver">
+
+        <img src="Images/gameover.jpg" width="300" height="180">
+        <form>
+            <input type="text" placeholder="Please Enter Your Name" id="namePlayer" required>
+            <br>
+
+            <button type="submit">Submit </button>
+        </form>
+    </div>
+
+    <div id="divPause">
+
+        <h2 id="h2Pause">Game Paused</h2>
+
+        <button id="displayButton" class="pauseButtons" onclick="pauseMenuRemove()">Continue</button>
+
+        <a href="game.html" class="aPauseButtons"><button class="pauseButtons">Restart</button></a>
+
+        <a href="index.html" class="aPauseButtons"><button class="pauseButtons">Quit</button></a>
+    </div>
+
+    <script src="js/main.js"></script>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,266 @@
+body 
+{       
+        margin: 0;
+        padding: 0;
+        background-image: url("./Images/back3.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+}
+.logo
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+    height: 30%;
+}
+
+h3
+{
+    font-size: x-large;
+}
+
+
+#h3_Score
+{
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 35%;
+    left: 6%;
+    color: white;
+}
+
+#h3_highScore
+{
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 52%;
+    left: 5%;
+    color: white;
+}
+
+
+
+
+.options
+{
+    margin-left: 6%;
+    margin-top: 115px;
+    margin-bottom: 10%;
+   
+}
+.new_game
+{  width: 25%;
+    height: 25%;
+    opacity: 0.7;
+}
+.new_game:hover
+{
+    opacity: 1; 
+}
+
+
+
+
+#divPause
+{
+    display:none;
+    position: absolute;
+    left: 22.4%;
+    top: 20%;
+    width: 55%;
+    background-color: #0000008a;
+    height: 59%;
+    text-align: center;
+    border-radius: 10px;
+}
+
+#h4Pause
+{
+    position: absolute;
+    right: 2%;
+    top: 0%;
+    color: white;
+    
+    font-size: 27px;
+}
+
+.fa-pause
+{    
+    font-size: medium;
+}
+
+
+
+#h2Pause
+{
+    color: burlywood;
+    font-size: larger;
+
+}
+
+
+.pauseButtons
+{
+    display: block;
+    font-size: 20px;
+    color: #621fa1;
+    margin: 4% 40%;
+    padding: 2% 0%;
+    width: 20%;
+    border-radius: 13px;
+    background-color: #FFDEBF;
+    font-family: 'Black Ops One', cursive;
+}
+
+.pauseButtons:hover
+{
+    font-size: 22px;
+    color: navajowhite;
+    margin: 3% 41%;
+    padding: 2% 0%;
+    width: 23%;
+    background: linear-gradient(45deg,darkslategray,black);
+    
+}
+
+
+.pauseButtons:hover
+{
+    color: navajowhite;   
+}
+
+a.aPauseButtons
+{
+    text-decoration: none;
+}
+
+
+/* .new_game:hover
+{
+    width: 24%;
+    opacity: 1;;
+} */
+
+.high_scores
+{  width: 25%;
+    height: 25%;
+    margin-top: -50px; 
+    opacity: 0.7
+}
+
+.high_scores:hover
+{
+    opacity: 1;
+}
+
+.badges
+{
+    margin-top: 2%;
+    opacity: 1;
+    margin-left :50px;
+}
+
+canvas {
+    border: solid;
+    border-color: rgb(0, 0, 0);
+    background-color:rgb(27, 124, 27);
+    width:55%;
+
+}
+
+.back
+{
+    display: inline-block;
+    float: left;
+    opacity: .5; 
+}
+.back:hover
+{
+    opacity: 1;
+}
+/* 
+.logo
+{
+    display: inline-block;
+    margin-left: 20%;
+    width: 50%;
+    height: 40%;
+} */
+.home
+{ 
+    float: right;
+    display: block;
+    opacity: .5;
+}
+.home:hover
+{
+    opacity: 1;
+}
+
+#highScores
+{
+    height: 20%;
+    margin-left: 3%;
+    margin-top: -7%;
+}
+p
+{
+    font: outline;
+    font-size: 30;
+    font: bold;
+    color:white;
+    margin-left: 10%;
+    margin-top:-.3%;
+    font-family: 'Pacifico', cursive;
+    /* font-family: 'VT323', monospace;  */
+}
+
+#game_over{
+    position: absolute;
+    top: 28%;
+    left: 39.5%;
+    background: rgba(126,126,126,0.2);
+    border-radius: 11px;
+    text-align: center;
+    padding: 15px;
+
+}
+#game_over img {
+    margin-bottom: 15px;
+
+}
+
+
+#game_over input {
+  width: 300px;
+  height: 30px;
+  border-radius: 9px;
+  padding: 1px 11px;
+  border: 1px solid rgb(27, 124, 27);
+}
+
+#game_over input:focus-visible {
+  outline: rgb(27, 124, 27);
+  border: 2px solid rgb(27, 124, 27);
+}
+
+#game_over button {
+  /* width: 30px; */
+  color:white;
+  border-radius: 9px;
+  padding: 1px 11px;
+  border: 1px solid rgb(27, 124, 27);
+  background-color: rgb(49, 141, 49);
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  height: 40px;
+}
+
+.displayGameOver {
+display: none;
+
+}
